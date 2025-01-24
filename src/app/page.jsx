@@ -46,7 +46,7 @@ function MainComponent() {
       {
         title: "Cyberdarko - NewTribal",
         description: "Site de tatuagem e arte digital",
-        logo: "/cyberdarko-logo.jpg",
+        logo: "/public/images/cyberdarko-logo.jpg",
         preview: "/cyberdarko-preview.jpg",
         alt: "Logo da Cyberdarko NewTribal - Estúdio de Tatuagem",
         previewAlt:
