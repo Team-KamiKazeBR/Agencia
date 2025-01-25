@@ -2,10 +2,51 @@
 import React from "react";
 
 function MainComponent() {
+  const [isDarkMode, setIsDarkMode] = React.useState(true);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [currentTestimonial, setCurrentTestimonial] = React.useState(0);
   const [currentProject, setCurrentProject] = React.useState(0);
   const [formStep, setFormStep] = React.useState(1);
+  const [currentText, setCurrentText] = React.useState("realidade digital");
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [loopNum, setLoopNum] = React.useState(0);
+  const [typingSpeed, setTypingSpeed] = React.useState(150);
+
+  const words = [
+    "realidade digital",
+    "inovação tecnológica",
+    "transformação digital",
+    "futuro conectado",
+  ];
+
+  React.useEffect(() => {
+    let timer;
+    const handleType = () => {
+      const current = loopNum % words.length;
+      const fullText = words[current];
+
+      setCurrentText((prev) => {
+        if (isDeleting) {
+          setTypingSpeed(100);
+          return fullText.substring(0, prev.length - 1);
+        } else {
+          setTypingSpeed(150);
+          return fullText.substring(0, prev.length + 1);
+        }
+      });
+
+      if (!isDeleting && currentText === fullText) {
+        setTimeout(() => setIsDeleting(true), 1500);
+      } else if (isDeleting && currentText === "") {
+        setIsDeleting(false);
+        setLoopNum((prev) => prev + 1);
+      }
+    };
+
+    timer = setTimeout(handleType, typingSpeed);
+    return () => clearTimeout(timer);
+  }, [currentText, isDeleting, loopNum, typingSpeed, words]);
+
   const [formData, setFormData] = React.useState({
     nome: "",
     email: "",
@@ -137,7 +178,21 @@ function MainComponent() {
           content="Agência especializada em desenvolvimento de sites, aplicativos, e-commerce e sistemas"
         />
       </head>
-      <div className="bg-[#0a0a0a]">
+      <div
+        className={`${
+          isDarkMode ? "bg-[#222E35]" : "bg-white"
+        } transition-colors duration-300`}
+      >
+        <button
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          className="fixed top-4 right-20 z-50 p-2 rounded-full transition-all duration-300 hover:scale-110"
+          style={{
+            background: isDarkMode ? "#ffffff" : "#222E35",
+            color: isDarkMode ? "#222E35" : "#ffffff",
+          }}
+        >
+          <i className={`fas ${isDarkMode ? "fa-sun" : "fa-moon"} text-xl`}></i>
+        </button>
         <div className="fixed bottom-4 right-4 z-50">
           <a
             href="https://wa.me/5511979993534"
@@ -149,14 +204,20 @@ function MainComponent() {
             <span className="font-poppins">Fale Conosco</span>
           </a>
         </div>
-        <nav className="fixed w-full bg-[#0a0a0a]/95 backdrop-blur-sm z-50 px-4 py-4 transition-all duration-300">
+        <nav
+          className={`fixed w-full ${
+            isDarkMode ? "bg-[#111B21]/95" : "bg-white/95"
+          } backdrop-blur-sm z-50 px-4 py-4 transition-all duration-300`}
+        >
           <div className="container mx-auto flex justify-between items-center">
             <div className="text-[#ff3333] text-2xl font-bold font-poppins animate-float">
               Redfield
             </div>
 
             <button
-              className="md:hidden text-white transition-transform duration-300 hover:scale-110"
+              className={`md:hidden ${
+                isDarkMode ? "text-white" : "text-[#222E35]"
+              } transition-transform duration-300 hover:scale-110`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <i className={`fas ${isMenuOpen ? "fa-times" : "fa-bars"}`}></i>
@@ -165,31 +226,51 @@ function MainComponent() {
             <div className="hidden md:flex space-x-8">
               <a
                 href="#inicio"
-                className="text-white hover:text-[#ff3333] font-poppins transition-colors duration-300 hover:scale-105 transform"
+                className={`${
+                  isDarkMode
+                    ? "text-white hover:text-[#ff3333]"
+                    : "text-[#222E35] hover:text-[#ff3333]"
+                } font-poppins transition-colors duration-300 hover:scale-105 transform`}
               >
                 Início
               </a>
               <a
                 href="#servicos"
-                className="text-white hover:text-[#ff3333] font-poppins transition-colors duration-300 hover:scale-105 transform"
+                className={`${
+                  isDarkMode
+                    ? "text-white hover:text-[#ff3333]"
+                    : "text-[#222E35] hover:text-[#ff3333]"
+                } font-poppins transition-colors duration-300 hover:scale-105 transform`}
               >
                 Serviços
               </a>
               <a
                 href="#projetos"
-                className="text-white hover:text-[#ff3333] font-poppins transition-colors duration-300 hover:scale-105 transform"
+                className={`${
+                  isDarkMode
+                    ? "text-white hover:text-[#ff3333]"
+                    : "text-[#222E35] hover:text-[#ff3333]"
+                } font-poppins transition-colors duration-300 hover:scale-105 transform`}
               >
                 Projetos
               </a>
               <a
                 href="#depoimentos"
-                className="text-white hover:text-[#ff3333] font-poppins transition-colors duration-300 hover:scale-105 transform"
+                className={`${
+                  isDarkMode
+                    ? "text-white hover:text-[#ff3333]"
+                    : "text-[#222E35] hover:text-[#ff3333]"
+                } font-poppins transition-colors duration-300 hover:scale-105 transform`}
               >
                 Depoimentos
               </a>
               <a
                 href="#contato"
-                className="text-white hover:text-[#ff3333] font-poppins transition-colors duration-300 hover:scale-105 transform"
+                className={`${
+                  isDarkMode
+                    ? "text-white hover:text-[#ff3333]"
+                    : "text-[#222E35] hover:text-[#ff3333]"
+                } font-poppins transition-colors duration-300 hover:scale-105 transform`}
               >
                 Contato
               </a>
@@ -208,36 +289,58 @@ function MainComponent() {
           <div
             className={`${
               isMenuOpen ? "animate-fade-in" : "hidden"
-            } md:hidden absolute top-16 left-0 right-0 bg-[#0a0a0a]/95 backdrop-blur-sm p-4`}
+            } md:hidden absolute top-16 left-0 right-0 ${
+              isDarkMode ? "bg-[#111B21]/95" : "bg-white/95"
+            } backdrop-blur-sm p-4`}
           >
             <div className="flex flex-col space-y-4">
               <a
                 href="#inicio"
-                className="text-white hover:text-[#ff3333] font-poppins transition-colors duration-300"
+                className={`${
+                  isDarkMode
+                    ? "text-white hover:text-[#ff3333]"
+                    : "text-[#222E35] hover:text-[#ff3333]"
+                } font-poppins transition-colors duration-300`}
               >
                 Início
               </a>
               <a
                 href="#servicos"
-                className="text-white hover:text-[#ff3333] font-poppins transition-colors duration-300"
+                className={`${
+                  isDarkMode
+                    ? "text-white hover:text-[#ff3333]"
+                    : "text-[#222E35] hover:text-[#ff3333]"
+                } font-poppins transition-colors duration-300`}
               >
                 Serviços
               </a>
               <a
                 href="#projetos"
-                className="text-white hover:text-[#ff3333] font-poppins transition-colors duration-300"
+                className={`${
+                  isDarkMode
+                    ? "text-white hover:text-[#ff3333]"
+                    : "text-[#222E35] hover:text-[#ff3333]"
+                } font-poppins transition-colors duration-300`}
               >
                 Projetos
               </a>
               <a
                 href="#depoimentos"
-                className="text-white hover:text-[#ff3333] font-poppins transition-colors duration-300"
+                className={`${
+                  isDarkMode
+                    ? "text-white hover:text-[#ff3333]"
+                    : "text-[#222E35] hover:text-[#ff3333]"
+                } font-poppins transition-colors duration-300`}
               >
                 Depoimentos
               </a>
               <a
                 href="#contato"
-                className="text-white hover:text-[#ff3333] font-poppins transition-colors duration-300"
+                className={`${
+                  isDarkMode
+                    ? "text-white hover:text-[#ff3333]"
+                    : "text-[#222E35] hover:text-[#ff3333]"
+                } font-poppins transition-colors duration-300`}
               >
                 Contato
               </a>
@@ -255,14 +358,21 @@ function MainComponent() {
         </nav>
         <section id="inicio" className="pt-24 pb-12 px-4">
           <div className="container mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-white font-poppins mb-6 animate-slide-in">
+            <h1
+              className={`text-4xl md:text-6xl font-bold ${
+                isDarkMode ? "text-white" : "text-[#222E35]"
+              } font-poppins mb-6 animate-slide-in`}
+            >
               Transformando Ideias em{" "}
-              <span className="text-[#ff3333] animate-float inline-block">
-                Realidade Digital
+              <span className="text-[#ff3333] inline-block">
+                <span className="animate-typing">{currentText}</span>
+                <span className="animate-blink">|</span>
               </span>
             </h1>
             <p
-              className="text-gray-300 text-lg md:text-xl mb-8 font-poppins animate-fade-in"
+              className={`${
+                isDarkMode ? "text-gray-300" : "text-gray-600"
+              } text-lg md:text-xl mb-8 font-poppins animate-fade-in`}
               style={{ animationDelay: "0.3s" }}
             >
               Especialistas em desenvolvimento de Sites, Apps, E-commerce e
@@ -289,21 +399,40 @@ function MainComponent() {
             </div>
           </div>
         </section>
-        <section id="servicos" className="py-16 px-4 bg-[#111111]">
+        <section
+          id="servicos"
+          className={`py-16 px-4 ${
+            isDarkMode ? "bg-[#1B252B]" : "bg-gray-100"
+          }`}
+        >
           <div className="container mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12 font-poppins animate-slide-in">
+            <h2
+              className={`text-3xl md:text-4xl font-bold ${
+                isDarkMode ? "text-white" : "text-[#222E35]"
+              } text-center mb-12 font-poppins animate-slide-in`}
+            >
               Nossos Serviços
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div
-                className="bg-[#0a0a0a] p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group"
+                className={`${
+                  isDarkMode ? "bg-[#141C21]" : "bg-white"
+                } p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group`}
                 style={{ animationDelay: "0.2s" }}
               >
                 <i className="fa-solid fa-globe text-[#ff3333] text-3xl mb-4 animate-float"></i>
-                <h3 className="text-white text-xl font-bold mb-2 font-poppins">
+                <h3
+                  className={`${
+                    isDarkMode ? "text-white" : "text-[#222E35]"
+                  } text-xl font-bold mb-2 font-poppins`}
+                >
                   Sites
                 </h3>
-                <p className="text-gray-400 font-poppins">
+                <p
+                  className={`${
+                    isDarkMode ? "text-gray-400" : "text-gray-600"
+                  } font-poppins`}
+                >
                   Desenvolvimento de sites responsivos e modernos
                 </p>
                 <a
@@ -317,14 +446,24 @@ function MainComponent() {
                 </a>
               </div>
               <div
-                className="bg-[#0a0a0a] p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group"
+                className={`${
+                  isDarkMode ? "bg-[#141C21]" : "bg-white"
+                } p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group`}
                 style={{ animationDelay: "0.4s" }}
               >
                 <i className="fa-solid fa-mobile-screen text-[#ff3333] text-3xl mb-4 animate-float"></i>
-                <h3 className="text-white text-xl font-bold mb-2 font-poppins">
+                <h3
+                  className={`${
+                    isDarkMode ? "text-white" : "text-[#222E35]"
+                  } text-xl font-bold mb-2 font-poppins`}
+                >
                   Apps
                 </h3>
-                <p className="text-gray-400 font-poppins">
+                <p
+                  className={`${
+                    isDarkMode ? "text-gray-400" : "text-gray-600"
+                  } font-poppins`}
+                >
                   Aplicativos mobile iOS e Android
                 </p>
                 <a
@@ -338,14 +477,24 @@ function MainComponent() {
                 </a>
               </div>
               <div
-                className="bg-[#0a0a0a] p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group"
+                className={`${
+                  isDarkMode ? "bg-[#141C21]" : "bg-white"
+                } p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group`}
                 style={{ animationDelay: "0.6s" }}
               >
                 <i className="fa-solid fa-cart-shopping text-[#ff3333] text-3xl mb-4 animate-float"></i>
-                <h3 className="text-white text-xl font-bold mb-2 font-poppins">
+                <h3
+                  className={`${
+                    isDarkMode ? "text-white" : "text-[#222E35]"
+                  } text-xl font-bold mb-2 font-poppins`}
+                >
                   E-commerce
                 </h3>
-                <p className="text-gray-400 font-poppins">
+                <p
+                  className={`${
+                    isDarkMode ? "text-gray-400" : "text-gray-600"
+                  } font-poppins`}
+                >
                   Lojas virtuais completas e personalizadas
                 </p>
                 <a
@@ -359,14 +508,24 @@ function MainComponent() {
                 </a>
               </div>
               <div
-                className="bg-[#0a0a0a] p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group"
+                className={`${
+                  isDarkMode ? "bg-[#141C21]" : "bg-white"
+                } p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group`}
                 style={{ animationDelay: "0.8s" }}
               >
                 <i className="fa-solid fa-robot text-[#ff3333] text-3xl mb-4 animate-float"></i>
-                <h3 className="text-white text-xl font-bold mb-2 font-poppins">
+                <h3
+                  className={`${
+                    isDarkMode ? "text-white" : "text-[#222E35]"
+                  } text-xl font-bold mb-2 font-poppins`}
+                >
                   IA & Automação
                 </h3>
-                <p className="text-gray-400 font-poppins">
+                <p
+                  className={`${
+                    isDarkMode ? "text-gray-400" : "text-gray-600"
+                  } font-poppins`}
+                >
                   Soluções inteligentes para seu negócio
                 </p>
                 <a
@@ -380,14 +539,24 @@ function MainComponent() {
                 </a>
               </div>
               <div
-                className="bg-[#0a0a0a] p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group"
+                className={`${
+                  isDarkMode ? "bg-[#141C21]" : "bg-white"
+                } p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group`}
                 style={{ animationDelay: "1s" }}
               >
                 <i className="fa-solid fa-shield-halved text-[#ff3333] text-3xl mb-4 animate-float"></i>
-                <h3 className="text-white text-xl font-bold mb-2 font-poppins">
+                <h3
+                  className={`${
+                    isDarkMode ? "text-white" : "text-[#222E35]"
+                  } text-xl font-bold mb-2 font-poppins`}
+                >
                   Avaliação LGPD
                 </h3>
-                <p className="text-gray-400 font-poppins">
+                <p
+                  className={`${
+                    isDarkMode ? "text-gray-400" : "text-gray-600"
+                  } font-poppins`}
+                >
                   Consultoria e adequação à Lei Geral de Proteção de Dados
                 </p>
                 <a
@@ -401,14 +570,24 @@ function MainComponent() {
                 </a>
               </div>
               <div
-                className="bg-[#0a0a0a] p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group"
+                className={`${
+                  isDarkMode ? "bg-[#141C21]" : "bg-white"
+                } p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group`}
                 style={{ animationDelay: "1.2s" }}
               >
                 <i className="fa-solid fa-headset text-[#ff3333] text-3xl mb-4 animate-float"></i>
-                <h3 className="text-white text-xl font-bold mb-2 font-poppins">
+                <h3
+                  className={`${
+                    isDarkMode ? "text-white" : "text-[#222E35]"
+                  } text-xl font-bold mb-2 font-poppins`}
+                >
                   Suporte Técnico
                 </h3>
-                <p className="text-gray-400 font-poppins">
+                <p
+                  className={`${
+                    isDarkMode ? "text-gray-400" : "text-gray-600"
+                  } font-poppins`}
+                >
                   Assistência especializada 24/7 para sua infraestrutura
                 </p>
                 <a
@@ -422,14 +601,24 @@ function MainComponent() {
                 </a>
               </div>
               <div
-                className="bg-[#0a0a0a] p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group"
+                className={`${
+                  isDarkMode ? "bg-[#141C21]" : "bg-white"
+                } p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group`}
                 style={{ animationDelay: "1.4s" }}
               >
                 <i className="fa-solid fa-landmark-dome text-[#ff3333] text-3xl mb-4 animate-float"></i>
-                <h3 className="text-white text-xl font-bold mb-2 font-poppins">
+                <h3
+                  className={`${
+                    isDarkMode ? "text-white" : "text-[#222E35]"
+                  } text-xl font-bold mb-2 font-poppins`}
+                >
                   Sites para Órgãos Públicos
                 </h3>
-                <p className="text-gray-400 font-poppins">
+                <p
+                  className={`${
+                    isDarkMode ? "text-gray-400" : "text-gray-600"
+                  } font-poppins`}
+                >
                   Portais governamentais com acessibilidade e transparência
                 </p>
                 <a
@@ -443,14 +632,24 @@ function MainComponent() {
                 </a>
               </div>
               <div
-                className="bg-[#0a0a0a] p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group"
+                className={`${
+                  isDarkMode ? "bg-[#141C21]" : "bg-white"
+                } p-6 rounded-lg transform hover:scale-105 transition-all duration-300 hover:shadow-2xl animate-fade-in relative group`}
                 style={{ animationDelay: "1.6s" }}
               >
                 <i className="fa-solid fa-tv text-[#ff3333] text-3xl mb-4 animate-float"></i>
-                <h3 className="text-white text-xl font-bold mb-2 font-poppins">
+                <h3
+                  className={`${
+                    isDarkMode ? "text-white" : "text-[#222E35]"
+                  } text-xl font-bold mb-2 font-poppins`}
+                >
                   Mídia Indoor
                 </h3>
-                <p className="text-gray-400 font-poppins">
+                <p
+                  className={`${
+                    isDarkMode ? "text-gray-400" : "text-gray-600"
+                  } font-poppins`}
+                >
                   Sistemas de comunicação visual para ambientes internos
                 </p>
                 <a
@@ -468,22 +667,40 @@ function MainComponent() {
         </section>
         <section id="projetos" className="py-16 px-4">
           <div className="container mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12 font-poppins">
+            <h2
+              className={`text-3xl md:text-4xl font-bold ${
+                isDarkMode ? "text-white" : "text-[#222E35]"
+              } text-center mb-12 font-poppins`}
+            >
               Nossos Projetos
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, index) => (
                 <div
                   key={index}
-                  className="bg-[#111111] rounded-lg p-6 hover:scale-105 transition-all duration-300"
+                  className={`${
+                    isDarkMode ? "bg-[#1B252B]" : "bg-gray-100"
+                  } rounded-lg p-6 hover:scale-105 transition-all duration-300`}
                 >
-                  <h3 className="text-white text-xl font-bold mb-4 font-poppins">
+                  <h3
+                    className={`${
+                      isDarkMode ? "text-white" : "text-[#222E35]"
+                    } text-xl font-bold mb-4 font-poppins`}
+                  >
                     {project.title}
                   </h3>
-                  <p className="text-gray-400 mb-6 font-poppins">
+                  <p
+                    className={`${
+                      isDarkMode ? "text-gray-400" : "text-gray-600"
+                    } mb-6 font-poppins`}
+                  >
                     {project.description}
                   </p>
-                  <div className="text-gray-400 mb-6 font-poppins">
+                  <div
+                    className={`${
+                      isDarkMode ? "text-gray-400" : "text-gray-600"
+                    } mb-6 font-poppins`}
+                  >
                     <p>{project.text}</p>
                   </div>
                   <a
@@ -520,7 +737,6 @@ function MainComponent() {
                     `*Descrição do Projeto:*\n${formData.descricao_projeto}\n\n` +
                     `*Público-alvo:*\n${formData.publico_alvo}\n\n` +
                     `*Diferenciais:*\n${formData.diferenciais}`;
-
                   const whatsappUrl = `https://wa.me/5511979993534?text=${encodeURIComponent(
                     message
                   )}`;
@@ -622,11 +838,18 @@ function MainComponent() {
                     <input
                       type="text"
                       name="orcamento"
-                      placeholder="Orçamento Previsto"
+                      placeholder="Orçamento Previsto (R$)"
                       value={formData.orcamento}
-                      onChange={(e) =>
-                        setFormData({ ...formData, orcamento: e.target.value })
-                      }
+                      onChange={(e) => {
+                        let value = e.target.value;
+                        value = value.replace(/\D/g, "");
+                        value = value.replace(/(\d)(\d{2})$/, "$1,$2");
+                        value = value.replace(/(?=(\d{3})+(\D))\B/g, ".");
+                        if (value !== "") {
+                          value = "R$ " + value;
+                        }
+                        setFormData({ ...formData, orcamento: value });
+                      }}
                       required
                       className="w-full p-3 rounded-lg bg-[#111111] text-white border border-[#333333] focus:border-[#ff3333] outline-none font-poppins"
                     />
@@ -727,7 +950,7 @@ function MainComponent() {
             </div>
           </div>
         </section>
-        <footer className="bg-[#0a0a0a] py-8 px-4">
+        <footer className="bg-[#222E35] py-8 px-4">
           <div className="container mx-auto text-center">
             <p className="text-gray-400 font-poppins">
               © 2025 Agência Redfield. Todos os direitos reservados.
@@ -756,6 +979,11 @@ function MainComponent() {
           100% { transform: translateY(0px); }
         }
 
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+
         .animate-fade-in {
           animation: fadeIn 0.8s ease-out forwards;
         }
@@ -770,6 +998,14 @@ function MainComponent() {
         
         .animate-float {
           animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-typing {
+          border-right: none;
+        }
+
+        .animate-blink {
+          animation: blink 1s step-end infinite;
         }
       `}</style>
         <></>
